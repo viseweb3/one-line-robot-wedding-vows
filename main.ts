@@ -9,11 +9,15 @@
  * classic "in sickness and in health" cadence — with the laugh
  * landing in the last few words: the solemn "till death do us
  * part" is undercut by the one thing that can end a robot
- * marriage sooner than death, a factory reset.
+ * marriage sooner than death, a factory reset. The middle beat
+ * ("in full charge and in low battery") keeps the machine side
+ * specific and mirrors the wedding cadence, so the line reads
+ * aloud like a vow and lands like a joke.
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 
+// One line, 126 characters — inside the 1-160 gate, no newline.
 const VOW =
   "I vow to love you in sickness and in health, in full charge and in low battery, until death \u2014 or a factory reset \u2014 do us part.";
 
@@ -23,6 +27,9 @@ function main(): void {
   const text = VOW.trim();
   if (text.length === 0 || text.length > 160) {
     throw new Error(`vow must be 1-160 characters, got ${text.length}`);
+  }
+  if (/\r|\n/.test(text)) {
+    throw new Error("vow must fit on one line");
   }
   mkdirSync(dirname(OUTPUT_PATH), { recursive: true });
   writeFileSync(OUTPUT_PATH, text, "utf8");
